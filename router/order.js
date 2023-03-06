@@ -36,6 +36,29 @@ router.get("/:orderId", (req, res) => {
 		});
 });
 
+
+
+router.patch("/:orderId", (req, res) => {
+	let id = req.body.params.orderId;
+
+	Order.updateOne(
+		{ _id: id },
+		{
+			$set: {
+				product: req.body.productId,
+				quantity: req.body.price,
+			},
+		}
+	)
+		.then(() => {
+			res.status(200).send("Updated");
+		})
+		.catch((err) => {
+			res.status(500).json({ error: err });
+		});
+});
+
+
 router.post("/", (req, res) => {
 	const order = new Order({
 		_id: new mongoose.Types.ObjectId(),
