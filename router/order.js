@@ -18,7 +18,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:orderId", (req, res) => {
-	let id = req.body.params.orderId;
+	let id = req.params.orderId;
 
 	Order.findOne({ _id: id })
 		.exec()
@@ -36,28 +36,26 @@ router.get("/:orderId", (req, res) => {
 		});
 });
 
-
-
 router.patch("/:orderId", (req, res) => {
-	let id = req.body.params.orderId;
-
+	let id = req.params.orderId;
 	Order.updateOne(
 		{ _id: id },
 		{
-			$set: {
-				product: req.body.productId,
-				quantity: req.body.price,
-			},
+			product: req.body.productId,
+			quantity: req.body.quantity,
 		}
 	)
 		.then(() => {
-			res.status(200).send("Updated");
+			res.status(200).json({
+				_id: id,
+				product: req.body.productId,
+				quantity: req.body.quantity,
+			});
 		})
-		.catch((err) => {
-			res.status(500).json({ error: err });
+		.catch(() => {
+			res.send("An error occured");
 		});
 });
-
 
 router.post("/", (req, res) => {
 	const order = new Order({
